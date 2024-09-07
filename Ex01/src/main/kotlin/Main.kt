@@ -2,20 +2,26 @@ import arrow.core.andThen
 import arrow.core.compose
 
 fun main(args: Array<String>) {
-    /*
-    Conditional Composition
 
-     Scenario: Ek function banao jo input number ko check kare agar woh even hai,
-     dusra function jo number ko square kare.
-     */
-    val isEven: (Int) -> Boolean = { it % 2 == 0 }
-    val squareInteger: (Int) -> Int = { it * it }
+    val tagPrice: Double = 1000.00
+    val discountPercent: Double = 20.00
 
-    // Using andThen: Squaring first (may not make sense logically)
-
-    val result = squareInteger compose { n: Int ->
-        if (isEven(n)) n else 0
+    //  calculate discount price
+    val applyDiscount: (Double, Double) -> Double = { price, discountPer ->
+        price * (discountPer) / 100
     }
-    println(result(5))
+
+    // calculate gst assuming 18%
+    val calculateTax: (Double, Int) -> Double = { sellingPrice, gstRate ->
+        (sellingPrice * gstRate) / 100
+    }
+    val calculateSellingPrice: (Double) -> Double = {
+        it - applyDiscount(tagPrice, discountPercent)
+    }
+    val finalPriceFunction = calculateSellingPrice andThen { sellingPrice ->
+        sellingPrice + calculateTax(sellingPrice, 18)
+    }
+    println("Final price: ${finalPriceFunction(tagPrice)}")
+    // OUTPUT: Final price: 944.0
 }
 
