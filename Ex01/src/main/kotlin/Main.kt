@@ -1,29 +1,18 @@
 import arrow.core.andThen
 import arrow.core.compose
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 fun main(args: Array<String>) {
 
-    val tagPrice: Double = 1000.00
-    val discountPercent: Double = 20.00
-
-    //  calculate discount price
-    val applyDiscount: (Double, Double) -> Double = { price, discountPer ->
-        price * (discountPer) / 100
+    val celciusToFaherenheit: (Double) -> Double = {
+        (it * 9/5) + 32
+    }
+    val roundToTwoDecimal: (Double) -> Double = {
+        round(it * 100) / 100
     }
 
-    // calculate gst assuming 18%
-    val calculateTax: (Double, Int) -> Double = { sellingPrice, gstRate ->
-        (sellingPrice * gstRate) / 100
-    }
-    val calculateSellingPrice: (Double) -> Double = {
-        it - applyDiscount(it, discountPercent)
-    }
-    val finalPriceFunction = calculateSellingPrice andThen { sellingPrice ->
-        sellingPrice + calculateTax(sellingPrice, 18)
-    }
-    println("Final price: ${finalPriceFunction(tagPrice)}")
-    // OUTPUT: Final price: 944.0
-
-
+    val faherenheit = celciusToFaherenheit andThen roundToTwoDecimal
+    println("Fahrenheit : ${faherenheit(1.2)}")
 }
 
