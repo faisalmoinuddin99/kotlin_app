@@ -16,12 +16,14 @@ fun main(args: Array<String>) {
         (sellingPrice * gstRate) / 100
     }
     val calculateSellingPrice: (Double) -> Double = {
-        it - applyDiscount(tagPrice, discountPercent)
+        it - applyDiscount(it, discountPercent)
     }
     val finalPriceFunction = calculateSellingPrice andThen { sellingPrice ->
         sellingPrice + calculateTax(sellingPrice, 18)
     }
     println("Final price: ${finalPriceFunction(tagPrice)}")
     // OUTPUT: Final price: 944.0
+
+
 }
 
